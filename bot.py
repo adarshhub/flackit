@@ -1,12 +1,11 @@
 import requests, json
-from flask import Flask, redirect, request, session, jsonify
+from flask import Flask
+from os import environ
 
 app = Flask(__name__)
 
-# ved - U01BS2H2QVC
-# api channel - C01BVMCRA21
-MY_TOKEN = 'xoxp-1419442495793-1403724219829-1430726323008-cf3201578ab203af447820cda15d102e'
-BOT_TOKEN = "xoxb-1419442495793-1413075542628-dQ8XrGmqaxn9iqnhF0fGcrj5"
+MY_TOKEN = environ['MY_TOKEN']
+BOT_TOKEN = environ['BOT_TOKEN']
 
 TOKEN_IN_USE = BOT_TOKEN
 
