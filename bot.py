@@ -35,7 +35,7 @@ def msgToChannel(channelId):
             'text': 'Hehehe....',
             'token': TOKEN_IN_USE}
     response = requests.post(url, data=data1)
-    if response.status_code == 200
+    if response.status_code == 200:
         return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
     else:
         return json.dumps({'success': False}), 200, {'ContentType':'application/json'}
