@@ -4,10 +4,9 @@ from os import environ
 
 app = Flask(__name__)
 
-# MY_TOKEN = environ['MY_TOKEN']
-# BOT_TOKEN = environ['BOT_TOKEN']
-MY_TOKEN = 'xoxp-1419442495793-1403724219829-1405794636342-a85c786b064214c7ba726ec5ea57bcdb'
-BOT_TOKEN = 'xoxb-1419442495793-1413075542628-mKalOzt7rrWxCw8fwuatkSlB'
+MY_TOKEN = environ['MY_TOKEN']
+BOT_TOKEN = environ['BOT_TOKEN']
+
 
 TOKEN_IN_USE = BOT_TOKEN
 
@@ -46,6 +45,6 @@ def listen():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
 
 
