@@ -43,7 +43,7 @@ def msgToChannel(channelId):
 @app.route('/listen', methods=['POST'])
 def listen():
     incoming = request.get_json()
-    channel = incoming['channel']
+    channel = incoming['event']['channel']
     msgToChannel(channel)
     return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
 
