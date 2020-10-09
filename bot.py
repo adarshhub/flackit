@@ -27,14 +27,17 @@ def msgToUser(userId):
             'text': "Using Flask Python"}
     requests.post(url, data=data1 )
 
-@app.route('/msgToChannel/<channelId>', methods= ['GET','POST'])
-def msgToChannel(channelId):
+
+def msgToChannel(userId, channelId):
     global TOKEN_IN_USE
     url = "https://slack.com/api/chat.postMessage"
+
     data1 = {'channel': channelId,
-            'text': 'Hehehe....',
+            'text': f'Hello <@{userId}>',
             'token': TOKEN_IN_USE}
+
     response = requests.post(url, data=data1)
+
     if response.status_code == 200:
         return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
     else:
@@ -43,8 +46,9 @@ def msgToChannel(channelId):
 @app.route('/listen', methods=['POST'])
 def listen():
     incoming = request.get_json()
-    channel = incoming['event']['channel']
-    msgToChannel(channel)
+    channelId = incoming['event']['channel']
+    userId = incoming['event']['user']
+    msgToChannel(userId, channelId)
     return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
 
 
