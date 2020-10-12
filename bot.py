@@ -1,6 +1,7 @@
 import requests, json
 from flask import Flask, request
 from os import environ
+from googlesearch import search
 
 app = Flask(__name__)
 
@@ -28,11 +29,24 @@ def msgToUser(userId):
     requests.post(url, data=data1 )
 
 
-def msgToChannel(userId, channelId):
+def msgToChannel(userId, channelId, message):
     global TOKEN_IN_USE
     url = "https://slack.com/api/chat.postMessage"
 
-    data1 = {'channel': channelId,
+    message = message.lower()
+    idx = message.find('search')
+    
+    data1 = {}
+    if idx != -1:
+        query = message[idx+6::]
+        result = ""
+        for x in search(query, tld="co.in", stop=2, pause=2):
+            result += str(x) + " \n "
+        data1 = {'channel': 1212,
+            'text': f'{result}',
+            'token': TOKEN_IN_USE}
+    else:
+        data1 = {'channel': 1231,
             'text': f'Hello <@{userId}>',
             'token': TOKEN_IN_USE}
 
@@ -48,7 +62,8 @@ def listen():
     incoming = request.get_json()
     channelId = incoming['event']['channel']
     userId = incoming['event']['user']
-    msgToChannel(userId, channelId)
+    msg = incomin['event']['text']
+    msgToChannel(userId, channelId, msg)
     return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
 
 
