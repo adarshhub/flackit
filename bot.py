@@ -42,11 +42,11 @@ def msgToChannel(userId, channelId, message):
         result = ""
         for x in search(query, tld="co.in", stop=2, pause=2):
             result += str(x) + " \n "
-        data1 = {'channel': 1212,
+        data1 = {'channel': channelId,
             'text': f'{result}',
             'token': TOKEN_IN_USE}
     else:
-        data1 = {'channel': 1231,
+        data1 = {'channel': channelId,
             'text': f'Hello <@{userId}>',
             'token': TOKEN_IN_USE}
 
