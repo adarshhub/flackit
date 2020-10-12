@@ -35,7 +35,7 @@ def msgToChannel(userId, channelId, message):
 
     message = message.lower()
     idx = message.find('search')
-    
+
     data1 = {}
     if idx != -1:
         query = message[idx+6::]
@@ -62,7 +62,7 @@ def listen():
     incoming = request.get_json()
     channelId = incoming['event']['channel']
     userId = incoming['event']['user']
-    msg = incomin['event']['text']
+    msg = incoming['event']['text']
     msgToChannel(userId, channelId, msg)
     return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
 
