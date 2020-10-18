@@ -41,16 +41,17 @@ def msgToChannel(userId, channelId, message):
     if idx != -1:
         query = message[idx+6::]
         url = ""
-
+        result = ""
         for x in search(query, tld="co.in", stop=1):
             url = str(x)
 
         try:
             source = requests.get(url).text
             soup = BeautifulSoup(source, 'lxml')
-            response = first_paragraph = soup.find('p')
+            first_paragraph = soup.find('p')
+            result = first_paragraph.text
         except:
-            response = "No result - Sorry!"
+            result = "No result - Sorry!"
 
         data1 = {'channel': channelId,
             'text': f'{result}',
