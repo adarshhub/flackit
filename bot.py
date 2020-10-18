@@ -76,7 +76,8 @@ def listen():
         msg = incoming['event']['text']
         msgToChannel(userId, channelId, msg)
     except:
-        return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
+        return json.dumps({'success': False}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
 
 
 if __name__ == '__main__':
