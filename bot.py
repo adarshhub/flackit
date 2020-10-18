@@ -3,6 +3,7 @@ from flask import Flask, request
 from os import environ
 from googlesearch import search
 from bs4 import BeautifulSoup
+import threading
 
 app = Flask(__name__)
 
@@ -30,6 +31,22 @@ def msgToUser(userId):
     requests.post(url, data=data1 )
 
 
+def google(query):
+    url = ""
+    for x in search(query, tld="co.in", stop=1):
+        url = str(x)
+
+    try:
+        source = requests.get(url).text
+        soup = BeautifulSoup(source, 'lxml')
+        first_paragraph = soup.find('p')
+        response = first_paragraph.text
+    except:
+        response = "No result - Sorry!"
+
+    return response
+
+
 def msgToChannel(userId, channelId, message):
     global TOKEN_IN_USE
     url = "https://slack.com/api/chat.postMessage"
@@ -40,18 +57,7 @@ def msgToChannel(userId, channelId, message):
     data1 = {}
     if idx != -1:
         query = message[idx+6::]
-        url = ""
-        result = ""
-        for x in search(query, tld="co.in", stop=1):
-            url = str(x)
-
-        try:
-            source = requests.get(url).text
-            soup = BeautifulSoup(source, 'lxml')
-            first_paragraph = soup.find('p')
-            result = first_paragraph.text
-        except:
-            result = "No result - Sorry!"
+        result = google(query)
 
         data1 = {'channel': channelId,
             'text': f'{result}',
@@ -62,11 +68,7 @@ def msgToChannel(userId, channelId, message):
             'token': TOKEN_IN_USE}
 
     response = requests.post(url, data=data1)
-
-    if response.status_code == 200:
-        return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
-    else:
-        return json.dumps({'success': False}), 200, {'ContentType':'application/json'}
+    return response.status_code
 
 @app.route('/listen', methods=['POST'])
 def listen():
@@ -75,7 +77,8 @@ def listen():
         channelId = incoming['event']['channel']
         userId = incoming['event']['user']
         msg = incoming['event']['text']
-        msgToChannel(userId, channelId, msg)
+        threading.Thread(target=msgToChannel, args=(userId, channelId, msg,)).start()
+            
     except:
         return json.dumps({'success': False}), 200, {'ContentType':'application/json'}
     return json.dumps({'success': True}), 200, {'ContentType':'application/json'}
